@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.btn {
+    @apply w-max not-italic font-semibold text-sm flex justify-center items-center cursor-pointer px-9 py-1.5 rounded-[30px] border-[transparent];
+    outline: none;
+    font-family: "Montserrat";
+}
