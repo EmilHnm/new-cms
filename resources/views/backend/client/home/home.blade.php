@@ -27,7 +27,7 @@
             <div class="post__image">
                 <img
                     class="cover"
-                    src="{{  !empty($hightlightPosts[0]->thumb)  ? asset('upload/post_images/'. $hightlightPosts[0]->thumb) : asset('/upload/no_image.jpg')  }}"
+                    src="{{  $hightlightPosts[0]->checkThumb()  ? $hightlightPosts[0]->thumb : asset('/upload/no_image.jpg')  }}"
                     alt=""
                     srcset=""
                 />
@@ -58,7 +58,7 @@
                 <a href={{ route('client.post.view', $hightlightPosts[1]->slug) }} >
                     <img
                         class="cover"
-                        src="{{  !empty($hightlightPosts[1]->thumb)  ? asset('upload/post_images/'. $hightlightPosts[1]->thumb) : asset('/upload/no_image.jpg')  }}"
+                        src="{{  $hightlightPosts[1]->checkThumb()  ?  $hightlightPosts[1]->thumb : asset('/upload/no_image.jpg')  }}"
                         alt=""
                         srcset=""
                     />
@@ -90,7 +90,7 @@
                 <a href={{ route('client.post.view', $hightlightPosts[2]->slug) }}>
                     <img
                         class="cover"
-                        src="{{  !empty($hightlightPosts[2]->thumb)  ? asset('upload/post_images/'. $hightlightPosts[2]->thumb) : asset('/upload/no_image.jpg')  }}"
+                        src="{{  $hightlightPosts[2]->checkThumb()  ?$hightlightPosts[2]->thumb : asset('/upload/no_image.jpg')  }}"
                         alt=""
                         srcset=""
                     />
@@ -208,9 +208,16 @@
                 </div>
             </div>
             <div class="post-item__cover">
-                <a href="{{ route('client.post.view', $post->slug) }}">
+                {{-- <a href="{{ route('client.post.view', $post->slug) }}">
                     <img
                     src="{{  !empty($post->thumb)  ? asset('upload/post_images/'. $post->thumb) : asset('/upload/no_image.jpg')  }}"
+                    alt=""
+                    class="cover"
+                    />
+                </a> --}}
+                <a href="{{ route('client.post.view', $post->slug) }}">
+                    <img
+                    src="{{   $post->checkThumb()  ? $post->thumb : asset('/upload/no_image.jpg')  }}"
                     alt=""
                     class="cover"
                     />

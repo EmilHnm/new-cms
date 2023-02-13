@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -33,6 +35,21 @@ class Post extends Model
         return 'slug';
     }
 
+    public function getThumbAttribute()
+    {
+        return Storage::cloud()->temporaryUrl(
+            'hoanm_img/' . $this->attributes['thumb'],
+            Carbon::now()->addMinutes(2)
+        );
+    }
+
+    public function checkThumb()
+    {
+        if (empty($this->attributes['thumb'])) {
+            return false;
+        }
+        return true;
+    }
 
     public function category()
     {

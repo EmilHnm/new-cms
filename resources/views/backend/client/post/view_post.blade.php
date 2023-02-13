@@ -79,7 +79,7 @@
                         </div>
                         <div class="post-item__cover">
                             <img
-                            src="{{  !empty($post_same->thumb)  ? asset('upload/post_images/'. $post_same->thumb) : asset('/upload/no_image.jpg')  }}"
+                            src="{{   $post_same->checkThumb()  ? $post_same->thumb : asset('/upload/no_image.jpg')  }}"
                             alt=""
                             class="cover"
                             />
@@ -122,7 +122,7 @@
                           </div>
                           <div class="post-item__cover">
                               <img
-                              src="{{  !empty($popular->thumb)  ? asset('upload/post_images/'. $popular->thumb) : asset('/upload/no_image.jpg')  }}"
+                              src="{{   $popular->checkThumb()  ? $popular->thumb : asset('/upload/no_image.jpg')  }}"
                               alt=""
                               class="cover"
                               />

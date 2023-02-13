@@ -54,7 +54,7 @@
 
     let search_box = document.getElementById('search_box');
     search_box.addEventListener('keyup', function(e){
-        if(e.keyCode == 13){
+        if(e.keyCode == 13 || e.key === 'Enter'){
             let query = search_box.value;
             window.location.href = '/search/?q=' + query;
         }

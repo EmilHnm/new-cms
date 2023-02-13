@@ -13,7 +13,7 @@
 -   [x] Quản lý user và phân quyền
 -   [x] CRUD Article/Category/Tag
 -   [x] Filter Dứ liệu theo một số trường
--   [ ] Kết nối và lưu trữ ảnh bằng MinIO thông qua s3 driver
+-   [x] Kết nối và lưu trữ ảnh bằng MinIO thông qua s3 driver
 -   [x] Hiện thị Logs
 -   [x] Dashboard
 

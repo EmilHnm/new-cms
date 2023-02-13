@@ -9,6 +9,7 @@ use GuzzleHttp\Client;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Storage;
 
 class GetDailyPost extends Command
 {
@@ -145,7 +146,6 @@ class GetDailyPost extends Command
         $post->slug = Str::slug($data->title);
         $post->description = $data->description;
         $post->content = $data->content;
-
         //check category exist
         $categoryCheck = Category::where('name', 'LIKE', '%' . $data->category . '%')->first();
         if ($categoryCheck) {
@@ -163,6 +163,7 @@ class GetDailyPost extends Command
             $client->request('GET', $data->post_thumb, [
                 'sink' => public_path('upload/post_images') . '/' . $filename
             ]);
+            Storage::cloud()->put('hoanm_img/' . $filename, file_get_contents(public_path('upload/post_images') . '/' . $filename,));
         } catch (\Throwable $th) {
             $this->error("Download image failed! ");
             return;
