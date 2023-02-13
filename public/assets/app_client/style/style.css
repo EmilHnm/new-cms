@@ -431,6 +431,7 @@ a.genre.active {
     font-weight: 600;
     position: relative;
     padding-bottom: 8px;
+    width:max-content;
 }
 .header__nav .navigation a.active {
     color: #495057;
@@ -793,7 +794,8 @@ a.genre.active {
     font-weight: 400;
     font-size: 16px;
     line-height: 28px;
-    text-align: justify;
+    margin: 10px auto;
+    /* text-align: justify; */
 }
 .post-container .content img {
     border-radius: 24px;

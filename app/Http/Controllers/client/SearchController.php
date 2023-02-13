@@ -19,7 +19,7 @@ class SearchController extends Controller
             $data['posts'] = Post::search('title:' . $search . '*')
                 ->query(function ($builder) {
                     $builder->with(['category', 'author']);
-                })->paginate(10);
+                })->orderBy('created_at', 'desc')->paginate(10);
             // $data['posts'] = Post::with(['category', 'author'])->where("title", "LIKE", "%" . $search . "%")->paginate(10);
             $data['page'] = json_decode($data['posts']->toJSON());
         }
