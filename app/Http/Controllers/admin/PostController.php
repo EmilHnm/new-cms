@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -117,10 +118,25 @@ class PostController extends Controller
         return Redirect()->route('admin.post.view')->with($message);
     }
 
+    public function PostUpdateAprrover(Request $request)
+    {
+        $post = Post::find($request->id);
+        if (!empty($post->approvor_id)) {
+            $post->approvor_id = null;
+        } else {
+            $post->approvor_id = Auth::user()->id;
+        }
+        $post->save();
+        return response()->json(["status" => "success"]);
+    }
+
     public function PostDelete($id)
     {
         $post = Post::find($id);
         @unlink(public_path('upload/post_images/' . $post->thumb));
+        if (Storage::cloud()->exists('hoanm_img/' . $post->thumb)) {
+            Storage::cloud()->delete('hoanm_img/' . $post->thumb);
+        }
         $post->tag()->detach();
         $post->delete();
         $message = array(

@@ -845,7 +845,7 @@ a.genre.active {
     flex-wrap: wrap;
 }
 .content-box.align-center {
-    margin: auto;
+    margin: 10px auto;
     padding: 10px;
 }
 figure figcaption {

@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use DOMXPath;
 use DOMDocument;
+use Carbon\Carbon;
 use App\Models\Post;
 use GuzzleHttp\Client;
 use App\Models\Category;
@@ -95,38 +96,80 @@ class GetDailyPost extends Command
                 $post_xpath = new DOMXPath($post_dom);
 
                 $this->info("Extracting DOM Successfully! Extracting Data");
-                $title = $post_xpath->query("//h1[@class='title-page detail']")->item(0)->nodeValue;
-                $category = $post_xpath->query("//ul[@class='breadcrumbs']/li/a")->item(0)->getAttribute('title');
-                $date = $post_xpath->query("//time[@class='author-time']")->item(0)->getAttribute('datetime');
-                $description = $post_xpath->query("//h2[@class='singular-sapo']")->item(0)->nodeValue;
-                $contentDOM = $post_xpath->query("//div[@class='singular-content']")->item(0);
-                $content = "";
-                foreach ($contentDOM->childNodes as $childNode) {
-                    if ($childNode->nodeName == 'figure') {
-                        foreach ($childNode->childNodes as $figureChildNode) {
-                            if ($figureChildNode->nodeName == 'img') {
-                                $figureChildNode->setAttribute('src', $figureChildNode->getAttribute('data-original'));
-                            }
-                        }
-                    }
-                    $content .= $childNode->ownerDocument->saveXML($childNode);
-                }
-                $content = str_replace('image align-center', '', $content);
-                $description = str_replace('(Dân trí) - ', '', $description);
 
-                $this->savePost((object) [
-                    'title' => $title,
-                    'category' => $category,
-                    'date' => $date,
-                    'description' => $description,
-                    'content' => $content,
-                    'post_thumb' => $post_thumb
-                ], $client);
+                if ($post_xpath->query("//h1[@class='title-page detail']")->item(0))
+                    $this->savePost($this->getNewpaperDantri($post_xpath, $post_thumb), $client);
+                else {
+                    $this->savePost($this->getMagazinesDantri($post_xpath), $client);
+                }
             }
         } catch (\Exception $e) {
             $this->error('Unknown error: ' . $e->getMessage());
             return Command::FAILURE;
         }
+    }
+
+    private function getMagazinesDantri($post_xpath)
+    {
+        $post_thumb = $post_xpath->query("//div[@class='e-magazine__cover']/h1/img")->item(0)->getAttribute('src');
+        $title = $post_xpath->query("//*[@class='align-center']")->item(0)->nodeValue;
+        $category = "Magazines";
+        $date = Carbon::now();
+        $description = $post_xpath->query("//p")->item(0)->nodeValue;
+        $contentDOM = $post_xpath->query("//div[@class='e-magazine__body']")->item(0);
+        $content = "";
+        foreach ($contentDOM->childNodes as $index => $childNode) {
+            if ($childNode->nodeValue == $title || $childNode->nodeValue == $description) {
+                continue;
+            }
+            if ($childNode->nodeName == 'figure') {
+                foreach ($childNode->childNodes as $figureChildNode) {
+                    if ($figureChildNode->nodeName == 'img') {
+                        $figureChildNode->setAttribute('src', $figureChildNode->getAttribute('data-original'));
+                    }
+                }
+            }
+            $content .= $childNode->ownerDocument->saveXML($childNode);
+        }
+
+        return (object) [
+            'title' => $title,
+            'category' => $category,
+            'date' => $date,
+            'description' => $description,
+            'content' => $content,
+            'post_thumb' => $post_thumb
+        ];
+    }
+
+    private function getNewpaperDantri($post_xpath, $post_thumb)
+    {
+        $title = $post_xpath->query("//h1[@class='title-page detail']")->item(0)->nodeValue;
+        $category = $post_xpath->query("//ul[@class='breadcrumbs']/li/a")->item(0)->getAttribute('title');
+        $date = $post_xpath->query("//time[@class='author-time']")->item(0)->getAttribute('datetime');
+        $description = $post_xpath->query("//h2[@class='singular-sapo']")->item(0)->nodeValue;
+        $contentDOM = $post_xpath->query("//div[@class='singular-content']")->item(0);
+        $content = "";
+        foreach ($contentDOM->childNodes as $childNode) {
+            if ($childNode->nodeName == 'figure') {
+                foreach ($childNode->childNodes as $figureChildNode) {
+                    if ($figureChildNode->nodeName == 'img') {
+                        $figureChildNode->setAttribute('src', $figureChildNode->getAttribute('data-original'));
+                    }
+                }
+            }
+            $content .= $childNode->ownerDocument->saveXML($childNode);
+        }
+        $content = str_replace('image align-center', '', $content);
+        $description = str_replace('(Dân trí) - ', '', $description);
+        return (object) [
+            'title' => $title,
+            'category' => $category,
+            'date' => $date,
+            'description' => $description,
+            'content' => $content,
+            'post_thumb' => $post_thumb
+        ];
     }
 
     private function savePost($data, Client $client)

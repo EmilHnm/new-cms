@@ -22,7 +22,7 @@
                                                     <th class="sorting" tabindex="0" aria-controls="example5" rowspan="1" colspan="1" aria-label="Slug: activate to sort column ascending" >Slug</th>
                                                     <th class="sorting" tabindex="0" aria-controls="example5" rowspan="1" colspan="1" aria-label="Title: activate to sort column ascending" >Title</th>
                                                     <th class="sorting" tabindex="0" aria-controls="example5" rowspan="1" colspan="1" aria-label="Author: activate to sort column ascending" >Author</th>
-                                                    <th class="sorting" tabindex="0" aria-controls="example5" rowspan="1" colspan="1" aria-label="Author: activate to sort column ascending" >Approvor</th>
+                                                    <th class="sorting" width="50px">Approved</th>
                                                     <th class="sorting" tabindex="0" aria-controls="example5" rowspan="1" colspan="1" aria-label="Category: activate to sort column ascending" >Category</th>
                                                     <th class="sorting" tabindex="0" aria-controls="example5" rowspan="1" colspan="1" style="width: 20%;">Action</th>
                                                 </tr>
@@ -34,7 +34,10 @@
                                                     <td>{{ $post->slug }}</td>
                                                     <td>{{ $post->title }}</td>
                                                     <td>{{ $post->author->name ?? '-' }}</td>
-                                                    <td>{{ $post->approvor->name ?? '-'}}</td>
+                                                    <td>
+                                                        <input type="checkbox" id="{{$post->id}}" value="{{$post->id}}" class="filled-in chk-col-info" {{ $post->approvor_id ? 'checked' : '' }} onchange="adminPostApp.updateApproved(event,{{$post->id}})">
+                                                        <label for="{{$post->id}}"></label>
+                                                    </td>
                                                     <td>{{ $post->category->name ?? '-'}}</td>
                                                     <td>
                                                         <a href="{{ route('admin.post.edit',$post->id) }}" class="btn btn-info mb-5">Edit</a>

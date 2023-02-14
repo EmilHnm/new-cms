@@ -39,7 +39,7 @@ class Post extends Model
     {
         return Storage::cloud()->temporaryUrl(
             'hoanm_img/' . $this->attributes['thumb'],
-            Carbon::now()->addMinutes(2)
+            Carbon::now()->addMinutes(5)
         );
     }
 

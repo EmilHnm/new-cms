@@ -67,7 +67,7 @@
                                             <div class="form-group">
                                                 <h5>User Role</h5>
                                                 <div class="controls">
-                                                    <select name="role" value="" id="role" required="" class="form-control">
+                                                    <select name="role" value="" id="role" required="" class="form-control" onchange="adminUserApp.setRolePermission(event)">
                                                         @foreach ($roles as $role)
                                                             <option value="{{ $role->id }}" {{ count($editData->roles) ? ($editData->roles[0]->id == $role->id ? 'selected' : '') : ""}}>{{ $role->name }}</option>
                                                         @endforeach
@@ -110,58 +110,4 @@
         </section>
     </div>
 </div>
-<script>
-const roleSelect = document.getElementById('role');
-const permissionCheckboxes = document.querySelectorAll('input[type="checkbox"]');
-const permissionCheckboxesArray = Array.from(permissionCheckboxes);
-let abortController = null;
-let signal = null;
-document.addEventListener('DOMContentLoaded', () => {
-    let selectedRole = roleSelect.value;
-    if(selectedRole)
-        fetch(`{{ route('admin.role.permission') }}?role=${selectedRole}`, {
-            method: 'GET',
-            signal: signal
-        })
-            .then(response => response.json())
-            .then(data => {
-                permissionCheckboxesArray.forEach(node => {
-                    if(data.includes(parseInt(node.value))) {
-                        node.checked = true;
-                        node.disabled = true;
-                    } else {
-                        node.checked = false;
-                        node.disabled = false;
-                    }
-                });
-            });
-});
-roleSelect.addEventListener('change', (e) => {
-    const selectedRole = e.target.value;
-    if(abortController) {
-        abortController.abort();
-        abortController = new AbortController();
-    } else {
-        abortController = new AbortController();
-    }
-    signal = abortController.signal;
-    fetch(`{{ route('admin.role.permission') }}?role=${selectedRole}`, {
-        method: 'GET',
-        signal: signal
-    })
-        .then(response => response.json())
-        .then(data => {
-            permissionCheckboxesArray.forEach(node => {
-                if(data.includes(parseInt(node.value))) {
-                    node.checked = true;
-                    node.disabled = true;
-                } else {
-                    node.checked = false;
-                    node.disabled = false;
-                }
-            });
-        });
-})
-</script>
-
 @endsection

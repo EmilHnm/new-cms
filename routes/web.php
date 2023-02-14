@@ -152,6 +152,7 @@ Route::group(
             Route::middleware('auth:admin')->prefix('posts')->group(function () {
                 Route::get('/view', [PostController::class, 'PostView'])->name('admin.post.view');
                 Route::get('/add', [PostController::class, 'PostAdd'])->name('admin.post.add');
+                Route::get('/update/approver', [PostController::class, 'PostUpdateAprrover'])->name('admin.post.update.approver');
                 Route::post('/store', [PostController::class, 'PostStore'])->name('admin.post.store');
                 Route::get('/edit/{id}', [PostController::class, 'PostEdit'])->name('admin.post.edit');
                 Route::post('/update/{id}', [PostController::class, 'PostUpdate'])->name('admin.post.update');
