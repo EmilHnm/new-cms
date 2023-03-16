@@ -1,6 +1,6 @@
 # CMS Laravel
 
-## Đề bài: Đề bài yêu cầu tạo một CMS với những tính năng CRUD cơ bản
+## Tạo một CMS với những tính năng CRUD cơ bản
 
 ### Thực hiện bởi: [Ngô Minh Hòa](https://github.com/EmilRailgun)
 
